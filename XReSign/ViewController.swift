@@ -34,7 +34,7 @@ class ViewController: NSViewController {
         }
     }
 
-
+    
     // MARK: - Certificates
 
     private func loadCertificates() {
@@ -81,7 +81,7 @@ class ViewController: NSViewController {
     private func organizationUnitFromCertificate(by name: String) -> String? {
         let query: [String: Any] = [kSecClass as String: kSecClassCertificate,
                                     kSecAttrLabel as String: name,
-                                    kSecReturnRef as String: kCFBooleanTrue]
+                                    kSecReturnRef as String: kCFBooleanTrue!]
         
         var item: CFTypeRef?
         let status = SecItemCopyMatching(query as CFDictionary, &item)
@@ -201,6 +201,7 @@ class ViewController: NSViewController {
     // MARK: - Actions
 
     @IBAction func actionBrowseIpa(_ sender: Any) {
+        
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
         openPanel.canChooseDirectories = false
@@ -208,7 +209,7 @@ class ViewController: NSViewController {
         openPanel.canChooseFiles = true
         openPanel.allowedFileTypes = ["ipa", "IPA"]
         openPanel.begin { (result) -> Void in
-            if result == NSFileHandlingPanelOKButton {
+            if result == .OK {
                 self.textFieldIpaPath.stringValue = openPanel.url?.path ?? ""
             }
         }
@@ -222,20 +223,20 @@ class ViewController: NSViewController {
         openPanel.canChooseFiles = true
         openPanel.allowedFileTypes = ["mobileprovision"]
         openPanel.begin { (result) -> Void in
-            if result == NSFileHandlingPanelOKButton {
+            if result == .OK {
                 self.textFieldProvisioningPath.stringValue = openPanel.url?.path ?? ""
             }
         }
     }
     
     @IBAction func actionChangeBundleId(_ sender: Any) {
-        textFieldBundleId.isEnabled = buttonChangeBundleId.state == NSOnState
+        textFieldBundleId.isEnabled = buttonChangeBundleId.state == NSControl.StateValue.on
     }
     
     @IBAction func actionSign(_ sender: Any) {
         let ipaPath = textFieldIpaPath.stringValue
         let provisioningPath = textFieldProvisioningPath.stringValue
-        let bundleId:String? = buttonChangeBundleId.state == NSOnState ? textFieldBundleId.stringValue : nil
+        let bundleId:String? = buttonChangeBundleId.state == NSControl.StateValue.on ? textFieldBundleId.stringValue : nil
         let index = comboBoxCertificates.indexOfSelectedItem
         let certificateName:String? = index >= 0 ? certificates[index] : nil
         
@@ -289,7 +290,7 @@ class ViewController: NSViewController {
     
     // MARK: - Alert
     
-    private func showAlertWith(title: String?, message: String, style: NSAlertStyle) {
+    private func showAlertWith(title: String?, message: String, style: NSAlert.Style) {
         let alert = NSAlert()
         alert.messageText = title ?? "XReSign"
         alert.informativeText = message
